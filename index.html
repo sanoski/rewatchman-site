@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rewatchman – Your AI Driving Companion</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        background: #0e1117;
+        color: #f0f0f0;
+        line-height: 1.6;
+      }
+      header,
+      section,
+      footer {
+        padding: 2rem;
+        max-width: 900px;
+        margin: auto;
+      }
+      h1 {
+        font-size: 2.5rem;
+        color: #61dafb;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      h2 {
+        font-size: 2rem;
+        margin-top: 2rem;
+        color: #61dafb;
+      }
+      .cta {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: #1f2937;
+        border-radius: 0.5rem;
+        text-align: center;
+      }
+      input[type="email"] {
+        padding: 0.75rem;
+        width: 70%;
+        border: none;
+        border-radius: 0.25rem;
+        margin-right: 0.5rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+      button {
+        padding: 0.75rem 1rem;
+        background: #61dafb;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .mockup {
+        margin-top: 2rem;
+        text-align: center;
+      }
+      .mockup img {
+        max-width: 100%;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease-in-out;
+      }
+      .mockup img:hover {
+        transform: scale(1.02);
+      }
+      ul li {
+        margin-bottom: 0.75rem;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      .feature-card {
+        background: #1a1e25;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+      }
+      .feature-card:hover {
+        transform: translateY(-4px);
+        background: #232931;
+      }
+      .audience-section {
+        background: #1a1e25;
+        padding: 2rem;
+        border-radius: 1rem;
+        margin-top: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+      footer {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #999;
+      }
+      .logo-img {
+        height: 60px;
+        background: transparent;
+        border-radius: 0;
+      }
+      .intro-video {
+        width: 100%;
+        max-width: 1000px; /* Increased width */
+        margin: 2rem auto;
+        display: block;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+      .header-image {
+        float: left;
+        margin-right: 1rem;
+        width: 150px; /* Adjust the size of the image */
+        margin-top: 2rem; /* Lower the image to align with the text */
+      }
+      .header-text {
+        display: inline-block;
+        max-width: 700px;
+        vertical-align: middle;
+      }
+      @media (max-width: 600px) {
+        h1 {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        input[type="email"],
+        button {
+          width: 100%;
+        }
+        .header-image {
+          width: 120px;
+        }
+      }
+      .form-container {
+        background: #1a1e25;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        margin-top: 2rem;
+      }
+      .form-container input[type="email"] {
+        width: 60%;
+        padding: 1rem;
+        font-size: 1.1rem;
+      }
+      .form-container button {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-text">
+        <br />
+        <h1>
+          <img
+            src="rewatchman_logo.png"
+            alt="Rewatchman Logo"
+            class="logo-img"
+          />
+          Rewatchman
+        </h1>
+        <p>
+          <img
+            src="concept_hub.png"
+            alt="Rewatchman Image"
+            class="header-image"
+            float="left"
+          />
+          <strong
+            >Meet Rewatchman, your AI driving companion that’s built to make
+            every drive smarter, safer, and more efficient.</strong
+          >
+        </p>
+        <p>
+          Imagine having an assistant that not only guides you but anticipates
+          your needs, learns from your daily routines, and offers personalized
+          suggestions to make your driving experience seamless. Whether it’s a
+          quick detour to avoid traffic or a reminder to stop for gas right when
+          you need it, Rewatchman is there, constantly adapting to improve your
+          drive. It’s not just navigation—it’s a driving companion that grows
+          smarter the more you use it.
+        </p>
+      </div>
+    </header>
+
+    <section>
+      <iframe
+        class="intro-video"
+        src="https://share.synthesia.io/embeds/f1e3b0c9-1f16-458c-a81e-400f81d95822"
+        title="Rewatchman Demo Video"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+    </section>
+
+    <section>
+      <h2>Why Rewatchman?</h2>
+      <p>
+        Today's GPS systems are static. You punch in a location, and they guide
+        you there. Rewatchman is different—it lives with your routine. It’s not
+        just navigation, it’s an intelligent companion that understands your
+        habits and priorities.
+      </p>
+      <ul>
+        <li>🧠 Remembers errands and favorite stops automatically</li>
+        <li>
+          📅 Smart reminders like "pick up groceries" when you're near the store
+        </li>
+        <li>
+          📢 Voice-first interaction while keeping your hands on the wheel
+        </li>
+        <li>📍 Personalized recommendations and offers on your route</li>
+        <li>
+          🚘 Uses AI to learn patterns and reduce unnecessary distractions
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Core Capabilities</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Contextual Memory</h3>
+          <p>
+            Knows your routines. Automatically reminds you of tasks when
+            relevant—like a real assistant.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Natural Voice Control</h3>
+          <p>
+            Ask anything, set reminders, search for stops, or get updates—all
+            hands-free.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Smart Route Awareness</h3>
+          <p>
+            Plans detours with purpose. Finds stops along your current path—not
+            miles away.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Monetized Mapping</h3>
+          <p>
+            Location-based offers shown respectfully. Think: intelligent, modern
+            radio ads.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mockup">
+      <h2>What It Could Look Like</h2>
+      <img src="hub_example.png" alt="Rewatchman App Interface" />
+    </section>
+
+    <section>
+      <h2>The Problem We Solve</h2>
+      <p>
+        Voice assistants today are reactive. GPS apps don’t retain personal
+        context. Rewatchman bridges the gap—offering intelligent, context-aware
+        help before you even realize you need it. Whether it’s a simple reminder
+        or a critical update, it delivers the right nudge at the right moment.
+      </p>
+    </section>
+
+    <section class="audience-section">
+      <h2>Who It's For</h2>
+      <p>
+        <strong
+          >Rewatchman is built for daily drivers who do more than just
+          commute.</strong
+        >
+        From busy parents juggling errands, to professionals managing tight
+        schedules, to road warriors who live by routine—this app is for those
+        who want more than passive navigation.
+      </p>
+      <ul>
+        <li>
+          <strong>Commuters</strong> who need helpful reminders without lifting
+          a finger.
+        </li>
+        <li>
+          <strong>Delivery drivers and gig workers</strong> who want
+          intelligent, route-aware suggestions and time-saving detours.
+        </li>
+        <li>
+          <strong>Small business owners</strong> who could benefit from
+          location-based visibility and micro-targeted promotions.
+        </li>
+        <li>
+          <strong>Tech-forward drivers</strong> seeking smarter, safer, and more
+          personalized assistance on the road.
+        </li>
+      </ul>
+      <p>
+        Rewatchman doesn’t just tell you where to go. It learns how you live and
+        helps you get more done while staying focused on the drive.
+      </p>
+    </section>
+
+    <section>
+      <h2>Contact Us</h2>
+      <a href="mailto:anzwertree@gmail.com">anzwertree@gmail.com</a>
+
+      <h3>Join the waiting list</h3>
+      <div class="form-container">
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter your email..."
+          required
+        />
+        <button type="submit">Subscribe</button>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 Rewatchman. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
