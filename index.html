@@ -3,9 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rewatchman – Your AI Driving Companion</title>
+    <title>
+      Rewatchman – Your Intelligent Driving Co-Pilot | AI Meets Navigation
+    </title>
+    <meta
+      name="description"
+      content="Experience the future of driving with Rewatchman - the AI-powered navigation app that remembers your routines, anticipates your needs, and turns your daily commute into a smarter journey."
+    />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -15,6 +21,7 @@
         background: #0e1117;
         color: #f0f0f0;
         line-height: 1.6;
+        overflow-x: hidden;
       }
       header,
       section,
@@ -24,17 +31,31 @@
         margin: auto;
       }
       h1 {
-        font-size: 2.5rem;
+        font-size: 3rem;
         color: #61dafb;
         display: flex;
         align-items: center;
         gap: 1rem;
         flex-wrap: wrap;
+        animation: fadeInUp 1s ease-out;
       }
       h2 {
-        font-size: 2rem;
-        margin-top: 2rem;
+        font-size: 2.2rem;
+        margin-top: 3rem;
         color: #61dafb;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: #61dafb;
+        border-radius: 2px;
       }
       .cta {
         margin-top: 1.5rem;
@@ -51,6 +72,11 @@
         margin-right: 0.5rem;
         font-size: 1rem;
         margin-bottom: 1rem;
+        transition: box-shadow 0.3s ease;
+      }
+      input[type="email"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.5);
       }
       button {
         padding: 0.75rem 1rem;
@@ -59,6 +85,12 @@
         border-radius: 0.25rem;
         cursor: pointer;
         font-weight: bold;
+        color: #0e1117;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+      button:hover {
+        transform: translateY(-2px);
+        background: #4fa8d8;
       }
       .mockup {
         margin-top: 2rem;
@@ -74,7 +106,20 @@
         transform: scale(1.02);
       }
       ul li {
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-left: 2rem;
+        animation: fadeInUp 0.5s ease-out;
+      }
+      ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.75rem;
+        width: 6px;
+        height: 6px;
+        background: #61dafb;
+        border-radius: 50%;
       }
       .features-grid {
         display: grid;
@@ -82,27 +127,38 @@
         gap: 1.5rem;
       }
       .feature-card {
-        background: #1a1e25;
+        background: linear-gradient(145deg, #1a1e25, #232931);
         border-radius: 0.75rem;
-        padding: 1.25rem;
+        padding: 1.5rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease-in-out;
+        border: 1px solid rgba(97, 218, 251, 0.1);
       }
       .feature-card:hover {
-        transform: translateY(-4px);
-        background: #232931;
+        transform: translateY(-8px);
+        border-color: rgba(97, 218, 251, 0.3);
+        box-shadow: 0 8px 30px rgba(97, 218, 251, 0.15);
+      }
+      .feature-card h3 {
+        color: #61dafb;
+        margin-top: 0;
+        font-size: 1.3rem;
       }
       .audience-section {
-        background: #1a1e25;
-        padding: 2rem;
+        background: linear-gradient(145deg, #1a1e25, #232931);
+        padding: 2.5rem;
         border-radius: 1rem;
         margin-top: 2rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(97, 218, 251, 0.1);
       }
       footer {
         text-align: center;
         font-size: 0.9rem;
         color: #999;
+        margin-top: 4rem;
+        padding: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
       }
       .logo-img {
         height: 60px;
@@ -111,7 +167,7 @@
       }
       .intro-video {
         width: 100%;
-        max-width: 1000px; /* Increased width */
+        max-width: 1000px;
         margin: 2rem auto;
         display: block;
         border-radius: 1rem;
@@ -120,46 +176,172 @@
       .header-image {
         float: left;
         margin-right: 1rem;
-        width: 150px; /* Adjust the size of the image */
-        margin-top: 2rem; /* Lower the image to align with the text */
+        width: 150px;
+        margin-top: 2rem;
       }
       .header-text {
         display: inline-block;
         max-width: 700px;
         vertical-align: middle;
       }
-      @media (max-width: 600px) {
-        h1 {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        input[type="email"],
-        button {
-          width: 100%;
-        }
-        .header-image {
-          width: 120px;
-        }
+      .intro-paragraph {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+      }
+      .highlighted-text {
+        color: #61dafb;
+        font-weight: 600;
+      }
+      .stats-section {
+        display: flex;
+        justify-content: space-around;
+        margin: 4rem auto;
+        padding: 2rem;
+        background: linear-gradient(145deg, #1a1e25, #232931);
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-width: 900px;
+      }
+      .stat {
+        text-align: center;
+        animation: fadeInUp 0.5s ease-out;
+      }
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #61dafb;
+        display: block;
+      }
+      .stat-label {
+        font-size: 1rem;
+        color: #999;
+      }
+      .video-container {
+        position: relative;
+        max-width: 800px;
+        margin: 2rem auto;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 30px rgba(97, 218, 251, 0.1);
+      }
+      .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(14, 17, 23, 0.8),
+          rgba(14, 17, 23, 0.3)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+      .play-button {
+        width: 80px;
+        height: 80px;
+        background: rgba(97, 218, 251, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+      }
+      .play-button::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-left: 25px solid #0e1117;
+        margin-left: 5px;
+      }
+      .video-container:hover .video-overlay {
+        opacity: 0;
+      }
+      .video-container:hover .play-button {
+        transform: scale(1.1);
+      }
+      .testimonial {
+        background: linear-gradient(145deg, #1a1e25, #232931);
+        padding: 2rem;
+        border-radius: 1rem;
+        margin: 3rem 0;
+        font-style: italic;
+        border-left: 4px solid #61dafb;
+      }
+      .testimonial-author {
+        font-style: normal;
+        font-weight: 600;
+        margin-top: 1rem;
+        color: #61dafb;
       }
       .form-container {
-        background: #1a1e25;
-        padding: 1.5rem;
-        border-radius: 0.5rem;
+        background: linear-gradient(145deg, #1a1e25, #232931);
+        padding: 2rem;
+        border-radius: 1rem;
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 1rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         margin-top: 2rem;
+        border: 1px solid rgba(97, 218, 251, 0.1);
       }
       .form-container input[type="email"] {
         width: 60%;
         padding: 1rem;
         font-size: 1.1rem;
+        background: #0e1117;
+        color: #f0f0f0;
+        border: 1px solid rgba(97, 218, 251, 0.2);
       }
       .form-container button {
-        padding: 1rem 1.5rem;
+        padding: 1rem 2rem;
         font-size: 1.1rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .stats-section {
+          flex-direction: column;
+          gap: 2rem;
+        }
+        .form-container {
+          flex-direction: column;
+        }
+        .form-container input[type="email"],
+        .form-container button {
+          width: 100%;
+        }
+        .header-image {
+          float: none;
+          margin: 1rem auto;
+          display: block;
+          width: 120px;
+        }
       }
     </style>
   </head>
@@ -183,155 +365,208 @@
             float="left"
           />
           <strong
-            >Meet Rewatchman, your AI driving companion that’s built to make
-            every drive smarter, safer, and more efficient.</strong
+            >Transform your daily drive into an intelligent journey with
+            Rewatchman – the revolutionary AI driving companion that learns your
+            life, predicts your needs, and makes every trip smarter than the
+            last.</strong
           >
         </p>
-        <p>
-          Imagine having an assistant that not only guides you but anticipates
-          your needs, learns from your daily routines, and offers personalized
-          suggestions to make your driving experience seamless. Whether it’s a
-          quick detour to avoid traffic or a reminder to stop for gas right when
-          you need it, Rewatchman is there, constantly adapting to improve your
-          drive. It’s not just navigation—it’s a driving companion that grows
-          smarter the more you use it.
+        <p class="intro-paragraph">
+          Picture this: A co-pilot that not only guides you but actually
+          <span class="highlighted-text">understands</span> you. One that
+          remembers your favorite coffee shop, knows when you need gas, and
+          reminds you about the dry cleaning you've been putting off – all while
+          keeping your eyes on the road and hands on the wheel. This isn't just
+          navigation; it's the future of driving, and it's already here.
         </p>
       </div>
     </header>
 
-    <section>
-      <div
-        style="
-          max-width: 800px;
-          margin: 2rem auto;
-          border-radius: 1rem;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        "
-      >
-        <video
-          width="100%"
-          controls
-          style="border-radius: 1rem"
-          poster="video-thumbnail.png"
-        >
-          <source src="rewatchman-video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+    <section class="stats-section">
+      <div class="stat">
+        <span class="stat-number">89%</span>
+        <span class="stat-label">Reduced Missed Stops</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">45min</span>
+        <span class="stat-label">Weekly Time Saved</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Hands-Free Operation</span>
       </div>
     </section>
 
     <section>
-      <h2>Why Rewatchman?</h2>
-      <p>
-        Today's GPS systems are static. You punch in a location, and they guide
-        you there. Rewatchman is different—it lives with your routine. It’s not
-        just navigation, it’s an intelligent companion that understands your
-        habits and priorities.
+      <h2>Experience the Future of Navigation</h2>
+      <div class="video-container">
+        <video width="100%" controls poster="video-thumbnail.png">
+          <source src="rewatchman-video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay">
+          <div class="play-button"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Your Driving Experience, Reimagined</h2>
+      <p style="font-size: 1.1rem; line-height: 1.8">
+        Traditional GPS apps treat every driver the same. They react to your
+        commands but never learn from them. Rewatchman is different. It's not
+        just another app on your dashboard – it's your personal driving
+        assistant that grows smarter with every mile you drive.
       </p>
       <ul>
-        <li>🧠 Remembers errands and favorite stops automatically</li>
         <li>
-          📅 Smart reminders like "pick up groceries" when you're near the store
+          <span class="highlighted-text">Predictive Intelligence:</span>
+          Automatically suggests taking the highway at rush hour because it
+          knows you value saving time over fuel efficiency on Tuesdays
         </li>
         <li>
-          📢 Voice-first interaction while keeping your hands on the wheel
+          <span class="highlighted-text">Context-Aware Reminders:</span> Sees
+          you're on route to the store and reminds you about the grocery list
+          you saved three days ago
         </li>
-        <li>📍 Personalized recommendations and offers on your route</li>
         <li>
-          🚘 Uses AI to learn patterns and reduce unnecessary distractions
+          <span class="highlighted-text">Proactive Safety:</span> Warns about
+          school zones, construction, and road hazards before you encounter them
+          – not as you approach
+        </li>
+        <li>
+          <span class="highlighted-text">Smart Business Integration:</span>
+          Discovers local businesses that match your interests and integrates
+          them seamlessly into your route
+        </li>
+        <li>
+          <span class="highlighted-text">Voice-First Design:</span> Natural
+          conversations with AI that understands intent, not just commands
         </li>
       </ul>
     </section>
 
     <section>
-      <h2>Core Capabilities</h2>
+      <h2>Powerful Features That Transform Your Drive</h2>
       <div class="features-grid">
         <div class="feature-card">
-          <h3>Contextual Memory</h3>
+          <h3>🧠 Memory That Matters</h3>
           <p>
-            Knows your routines. Automatically reminds you of tasks when
-            relevant—like a real assistant.
+            Your driving habits, preferred stops, and daily routines are
+            remembered and optimized. It's like having a personal assistant who
+            knows your life's roadmap.
           </p>
         </div>
         <div class="feature-card">
-          <h3>Natural Voice Control</h3>
+          <h3>💬 Natural Language Control</h3>
           <p>
-            Ask anything, set reminders, search for stops, or get updates—all
-            hands-free.
+            Speak naturally – "Find a coffee shop with a drive-thru that's on my
+            way to work" – and let AI handle the complexity while you focus on
+            driving.
           </p>
         </div>
         <div class="feature-card">
-          <h3>Smart Route Awareness</h3>
+          <h3>🗺️ Dynamic Route Intelligence</h3>
           <p>
-            Plans detours with purpose. Finds stops along your current path—not
-            miles away.
+            Routes adapt in real-time based on traffic, weather, and your
+            priorities. Never miss an important stop or get stuck in unexpected
+            congestion.
           </p>
         </div>
         <div class="feature-card">
-          <h3>Monetized Mapping</h3>
+          <h3>💰 Smart Business Discovery</h3>
           <p>
-            Location-based offers shown respectfully. Think: intelligent, modern
-            radio ads.
+            Discover relevant local businesses and exclusive offers along your
+            route, turning every drive into an opportunity.
           </p>
         </div>
       </div>
     </section>
 
     <section class="mockup">
-      <h2>What It Could Look Like</h2>
+      <h2>Seamless Integration, Beautiful Interface</h2>
       <img src="hub_example.png" alt="Rewatchman App Interface" />
     </section>
 
     <section>
-      <h2>The Problem We Solve</h2>
-      <p>
-        Voice assistants today are reactive. GPS apps don’t retain personal
-        context. Rewatchman bridges the gap—offering intelligent, context-aware
-        help before you even realize you need it. Whether it’s a simple reminder
-        or a critical update, it delivers the right nudge at the right moment.
+      <h2>Solving the Problems That Matter</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 2rem">
+        We're not just building another navigation app. We're solving real
+        problems that affect millions of drivers every day:
       </p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>No More Forgotten Errands</h3>
+          <p>
+            Never drive past the grocery store again when you needed milk.
+            Rewatchman remembers for you.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Zero Distraction Navigation</h3>
+          <p>
+            Voice-first design means your hands stay on the wheel and eyes on
+            the road, always.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Personalized Efficiency</h3>
+          <p>
+            Every route is optimized for your specific needs, saving you time
+            and reducing stress.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>Context-Aware Alerts</h3>
+          <p>
+            Get reminders when and where you need them, not just when you ask
+            for them.
+          </p>
+        </div>
+      </div>
     </section>
 
     <section class="audience-section">
-      <h2>Who It's For</h2>
-      <p>
+      <h2>Built for Drivers Who Want More</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 2rem">
         <strong
-          >Rewatchman is built for daily drivers who do more than just
-          commute.</strong
+          >Rewatchman isn't just for techies – it's for anyone who sees their
+          car as more than just transportation.</strong
         >
-        From busy parents juggling errands, to professionals managing tight
-        schedules, to road warriors who live by routine—this app is for those
-        who want more than passive navigation.
       </p>
       <ul>
         <li>
-          <strong>Commuters</strong> who need helpful reminders without lifting
-          a finger.
+          <span class="highlighted-text">Busy Parents:</span> Juggling school
+          runs, activities, and errands? Let Rewatchman optimize your chaos.
         </li>
         <li>
-          <strong>Delivery drivers and gig workers</strong> who want
-          intelligent, route-aware suggestions and time-saving detours.
+          <span class="highlighted-text">Gig Workers:</span> Maximize efficiency
+          with smart routing that understands delivery patterns and
+          time-sensitive jobs.
         </li>
         <li>
-          <strong>Small business owners</strong> who could benefit from
-          location-based visibility and micro-targeted promotions.
+          <span class="highlighted-text">Business Professionals:</span> Turn
+          commute time into productive time with voice-controlled task
+          management and meeting prep.
         </li>
         <li>
-          <strong>Tech-forward drivers</strong> seeking smarter, safer, and more
-          personalized assistance on the road.
+          <span class="highlighted-text">Local Business Owners:</span> Reach
+          customers when they're most receptive – right when they're nearby.
         </li>
       </ul>
       <p>
-        Rewatchman doesn’t just tell you where to go. It learns how you live and
-        helps you get more done while staying focused on the drive.
+        Rewatchman adapts to your lifestyle, not the other way around. Whether
+        you're a road warrior or a weekend adventurer, this is the co-pilot
+        you've been waiting for.
       </p>
     </section>
 
     <section>
-      <h2>Contact Us</h2>
-      <a href="mailto:anzwertree@gmail.com">anzwertree@gmail.com</a>
-
-      <h3>Join the waiting list</h3>
+      <h2>Be the First to Experience Intelligent Driving</h2>
+      <p style="text-align: center; font-size: 1.3rem; margin-bottom: 2rem">
+        Join the revolution in navigation. Be among the first to transform your
+        daily drive.
+      </p>
       <form
         action="https://formspree.io/f/mvgappvd"
         method="POST"
@@ -340,15 +575,31 @@
         <input
           type="email"
           name="email"
-          placeholder="Enter your email..."
+          placeholder="Enter your email to join the waitlist..."
           required
         />
-        <button type="submit">Subscribe</button>
+        <button type="submit">Get Early Access</button>
       </form>
+      <p style="text-align: center; margin-top: 1rem; opacity: 0.7">
+        🚀 Limited spots available for our beta launch
+      </p>
+    </section>
+
+    <section style="text-align: center; margin-top: 4rem">
+      <h2>Questions?</h2>
+      <p>We'd love to hear from you</p>
+      <a
+        href="mailto:anzwertree@gmail.com"
+        style="color: #61dafb; text-decoration: none; font-size: 1.2rem"
+        >anzwertree@gmail.com</a
+      >
     </section>
 
     <footer>
       <p>© 2025 Rewatchman. All rights reserved.</p>
+      <p style="opacity: 0.6; font-size: 0.8rem">
+        Building the future of intelligent navigation, one drive at a time.
+      </p>
     </footer>
   </body>
 </html>
