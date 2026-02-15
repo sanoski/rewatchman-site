@@ -3,603 +3,547 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Rewatchman – Your Intelligent Driving Co-Pilot | AI Meets Navigation
-    </title>
+    <title>Jahrule — Builder in Progress</title>
     <meta
       name="description"
-      content="Experience the future of driving with Rewatchman - the AI-powered navigation app that remembers your routines, anticipates your needs, and turns your daily commute into a smarter journey."
+      content="Railroad worker by day. Software developer by night. Building tools that matter, one line at a time."
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg: #0a0c10;
+        --surface: #111318;
+        --surface2: #181b22;
+        --border: rgba(255,255,255,0.07);
+        --accent: #7c6af7;
+        --accent2: #5eead4;
+        --text: #e8eaf0;
+        --text-secondary: #8b8fa8;
+        --text-muted: #4a4e63;
+        --radius: 12px;
+      }
+
+      html { scroll-behavior: smooth; }
+
       body {
-        font-family: "Inter", sans-serif;
-        margin: 0;
-        background: #0e1117;
-        color: #f0f0f0;
-        line-height: 1.6;
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
         overflow-x: hidden;
       }
-      header,
-      section,
-      footer {
-        padding: 2rem;
-        max-width: 900px;
-        margin: auto;
+
+      /* ── Layout ── */
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
       }
-      h1 {
-        font-size: 3rem;
-        color: #61dafb;
+
+      /* ── Nav ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10, 12, 16, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 1.5rem;
+      }
+      nav .inner {
+        max-width: 720px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      nav .wordmark {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.95rem;
+        color: var(--accent);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+      }
+      nav .wordmark span { color: var(--accent2); }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1.75rem;
+      }
+      nav a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      nav a:hover { color: var(--text); }
+
+      /* ── Hero ── */
+      .hero {
+        padding: 6rem 1.5rem 4rem;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .hero-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: var(--accent2);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
         display: flex;
         align-items: center;
+        gap: 0.5rem;
+      }
+      .hero-label::before {
+        content: '';
+        width: 24px;
+        height: 1px;
+        background: var(--accent2);
+        display: inline-block;
+      }
+      .hero h1 {
+        font-size: clamp(2.2rem, 6vw, 3.2rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
+      }
+      .hero h1 em {
+        font-style: normal;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        max-width: 560px;
+        margin-bottom: 2.5rem;
+        line-height: 1.8;
+      }
+      .hero-cta {
+        display: flex;
         gap: 1rem;
         flex-wrap: wrap;
-        animation: fadeInUp 1s ease-out;
       }
-      h2 {
-        font-size: 2.2rem;
-        margin-top: 3rem;
-        color: #61dafb;
-        position: relative;
-        padding-bottom: 0.5rem;
-      }
-      h2::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background: #61dafb;
-        border-radius: 2px;
-      }
-      .cta {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background: #1f2937;
-        border-radius: 0.5rem;
-        text-align: center;
-      }
-      input[type="email"] {
-        padding: 0.75rem;
-        width: 70%;
-        border: none;
-        border-radius: 0.25rem;
-        margin-right: 0.5rem;
-        font-size: 1rem;
-        margin-bottom: 1rem;
-        transition: box-shadow 0.3s ease;
-      }
-      input[type="email"]:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.5);
-      }
-      button {
-        padding: 0.75rem 1rem;
-        background: #61dafb;
-        border: none;
-        border-radius: 0.25rem;
-        cursor: pointer;
-        font-weight: bold;
-        color: #0e1117;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-      }
-      button:hover {
-        transform: translateY(-2px);
-        background: #4fa8d8;
-      }
-      .mockup {
-        margin-top: 2rem;
-        text-align: center;
-      }
-      .mockup img {
-        max-width: 100%;
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease-in-out;
-      }
-      .mockup img:hover {
-        transform: scale(1.02);
-      }
-      ul li {
-        margin-bottom: 1rem;
-        position: relative;
-        padding-left: 2rem;
-        animation: fadeInUp 0.5s ease-out;
-      }
-      ul li::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.75rem;
-        width: 6px;
-        height: 6px;
-        background: #61dafb;
-        border-radius: 50%;
-      }
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-      }
-      .feature-card {
-        background: linear-gradient(145deg, #1a1e25, #232931);
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease-in-out;
-        border: 1px solid rgba(97, 218, 251, 0.1);
-      }
-      .feature-card:hover {
-        transform: translateY(-8px);
-        border-color: rgba(97, 218, 251, 0.3);
-        box-shadow: 0 8px 30px rgba(97, 218, 251, 0.15);
-      }
-      .feature-card h3 {
-        color: #61dafb;
-        margin-top: 0;
-        font-size: 1.3rem;
-      }
-      .audience-section {
-        background: linear-gradient(145deg, #1a1e25, #232931);
-        padding: 2.5rem;
-        border-radius: 1rem;
-        margin-top: 2rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(97, 218, 251, 0.1);
-      }
-      footer {
-        text-align: center;
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1.4rem;
+        border-radius: 8px;
         font-size: 0.9rem;
-        color: #999;
-        margin-top: 4rem;
-        padding: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
       }
-      .logo-img {
-        height: 60px;
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-primary:hover { background: #6a59e0; transform: translateY(-1px); }
+      .btn-ghost {
         background: transparent;
-        border-radius: 0;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
       }
-      .intro-video {
-        width: 100%;
-        max-width: 1000px;
-        margin: 2rem auto;
-        display: block;
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+      /* ── Divider ── */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0;
       }
-      .header-image {
-        float: left;
-        margin-right: 1rem;
-        width: 150px;
-        margin-top: 2rem;
+
+      /* ── Section ── */
+      section {
+        padding: 4rem 1.5rem;
+        max-width: 720px;
+        margin: 0 auto;
       }
-      .header-text {
-        display: inline-block;
-        max-width: 700px;
-        vertical-align: middle;
-      }
-      .intro-paragraph {
-        font-size: 1.2rem;
-        line-height: 1.8;
-        opacity: 0.9;
-        margin-bottom: 2rem;
-      }
-      .highlighted-text {
-        color: #61dafb;
-        font-weight: 600;
-      }
-      .stats-section {
-        display: flex;
-        justify-content: space-around;
-        margin: 4rem auto;
-        padding: 2rem;
-        background: linear-gradient(145deg, #1a1e25, #232931);
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        max-width: 900px;
-      }
-      .stat {
-        text-align: center;
-        animation: fadeInUp 0.5s ease-out;
-      }
-      .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #61dafb;
-        display: block;
-      }
-      .stat-label {
-        font-size: 1rem;
-        color: #999;
-      }
-      .video-container {
-        position: relative;
-        max-width: 800px;
-        margin: 2rem auto;
-        border-radius: 1rem;
-        overflow: hidden;
-        box-shadow: 0 4px 30px rgba(97, 218, 251, 0.1);
-      }
-      .video-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-          45deg,
-          rgba(14, 17, 23, 0.8),
-          rgba(14, 17, 23, 0.3)
-        );
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-      }
-      .play-button {
-        width: 80px;
-        height: 80px;
-        background: rgba(97, 218, 251, 0.9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.3s ease;
-      }
-      .play-button::after {
-        content: "";
-        width: 0;
-        height: 0;
-        border-top: 15px solid transparent;
-        border-bottom: 15px solid transparent;
-        border-left: 25px solid #0e1117;
-        margin-left: 5px;
-      }
-      .video-container:hover .video-overlay {
-        opacity: 0;
-      }
-      .video-container:hover .play-button {
-        transform: scale(1.1);
-      }
-      .testimonial {
-        background: linear-gradient(145deg, #1a1e25, #232931);
-        padding: 2rem;
-        border-radius: 1rem;
-        margin: 3rem 0;
-        font-style: italic;
-        border-left: 4px solid #61dafb;
-      }
-      .testimonial-author {
-        font-style: normal;
-        font-weight: 600;
-        margin-top: 1rem;
-        color: #61dafb;
-      }
-      .form-container {
-        background: linear-gradient(145deg, #1a1e25, #232931);
-        padding: 2rem;
-        border-radius: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        margin-top: 2rem;
-        border: 1px solid rgba(97, 218, 251, 0.1);
-      }
-      .form-container input[type="email"] {
-        width: 60%;
-        padding: 1rem;
-        font-size: 1.1rem;
-        background: #0e1117;
-        color: #f0f0f0;
-        border: 1px solid rgba(97, 218, 251, 0.2);
-      }
-      .form-container button {
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
+      .section-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        color: var(--accent);
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        margin-bottom: 0.75rem;
       }
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+      section h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
       }
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 2rem;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .stats-section {
-          flex-direction: column;
-          gap: 2rem;
-        }
-        .form-container {
-          flex-direction: column;
-        }
-        .form-container input[type="email"],
-        .form-container button {
-          width: 100%;
-        }
-        .header-image {
-          float: none;
-          margin: 1rem auto;
-          display: block;
-          width: 120px;
-        }
+
+      /* ── About ── */
+      .about-body {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+        line-height: 1.85;
+      }
+      .about-body p + p { margin-top: 1.2rem; }
+      .about-body strong { color: var(--text); font-weight: 600; }
+
+      /* ── Track stat row ── */
+      .track-stats {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+      .track-stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.25rem 1.5rem;
+        flex: 1;
+        min-width: 140px;
+      }
+      .track-stat .value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--accent2);
+        display: block;
+        line-height: 1;
+        margin-bottom: 0.4rem;
+      }
+      .track-stat .label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      /* ── Projects ── */
+      .project-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: border-color 0.2s, transform 0.2s;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+      }
+      .project-card:hover {
+        border-color: rgba(124, 106, 247, 0.4);
+        transform: translateY(-2px);
+      }
+      .project-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+      }
+      .project-name {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--text);
+      }
+      .project-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        background: rgba(124,106,247,0.15);
+        color: var(--accent);
+        border-radius: 4px;
+        padding: 2px 8px;
+        border: 1px solid rgba(124,106,247,0.25);
+      }
+      .project-desc {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .project-stack {
+        margin-top: 0.75rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .stack-pill {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: var(--surface2);
+        border-radius: 4px;
+        padding: 2px 8px;
+      }
+
+      /* ── Resources ── */
+      .resource-list { list-style: none; }
+      .resource-list li {
+        border-bottom: 1px solid var(--border);
+      }
+      .resource-list li:last-child { border-bottom: none; }
+      .resource-list a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0;
+        text-decoration: none;
+        color: var(--text);
+        transition: color 0.2s;
+      }
+      .resource-list a:hover { color: var(--accent); }
+      .resource-info { display: flex; flex-direction: column; gap: 0.2rem; }
+      .resource-name { font-weight: 500; font-size: 0.95rem; }
+      .resource-desc { font-size: 0.825rem; color: var(--text-secondary); }
+      .resource-arrow {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        margin-left: 1rem;
+        transition: color 0.2s;
+      }
+      .resource-list a:hover .resource-arrow { color: var(--accent); }
+
+      /* ── Support ── */
+      .support-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2rem;
+        text-align: center;
+      }
+      .support-card p {
+        color: var(--text-secondary);
+        margin: 0.75rem auto 1.5rem;
+        max-width: 440px;
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      /* ── Footer ── */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 2rem 1.5rem;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.825rem;
+      }
+      footer a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      footer a:hover { color: var(--text); }
+
+      /* ── Fade-in animation ── */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeUp 0.6s ease-out forwards;
+      }
+      @keyframes fadeUp {
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in:nth-child(2) { animation-delay: 0.1s; }
+      .fade-in:nth-child(3) { animation-delay: 0.2s; }
+      .fade-in:nth-child(4) { animation-delay: 0.3s; }
+
+      @media (max-width: 540px) {
+        nav ul { gap: 1.1rem; }
+        .hero { padding: 4rem 1.5rem 3rem; }
+        .track-stats { flex-direction: column; }
       }
     </style>
   </head>
   <body>
-    <header>
-      <div class="header-text">
-        <br />
-        <h1>
-          <img
-            src="rewatchman_logo.png"
-            alt="Rewatchman Logo"
-            class="logo-img"
-          />
-          Rewatchman
-        </h1>
+
+    <nav>
+      <div class="inner">
+        <a href="#" class="wordmark">jahrule<span>.dev</span></a>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#support">Support</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="hero">
+      <p class="hero-label fade-in">Builder in Progress</p>
+      <h1 class="fade-in">
+        Laying track by day.<br />
+        Writing <em>code</em> by night.
+      </h1>
+      <p class="fade-in">
+        I'm Jahrule — a railroad maintenance worker with a keyboard in one hand
+        and a vision in the other. I build software because I believe the right
+        tool, built with care, can genuinely make someone's life easier.
+      </p>
+      <div class="hero-cta fade-in">
+        <a href="#projects" class="btn btn-primary">See My Work</a>
+        <a href="mailto:anzwertree@gmail.com" class="btn btn-ghost">Get in Touch</a>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- About -->
+    <section id="about">
+      <p class="section-label">About</p>
+      <h2>The long version</h2>
+      <div class="about-body">
         <p>
-          <img
-            src="concept_hub.png"
-            alt="Rewatchman Image"
-            class="header-image"
-            float="left"
-          />
-          <strong
-            >Transform your daily drive into an intelligent journey with
-            Rewatchman – the revolutionary AI driving companion that learns your
-            life, predicts your needs, and makes every trip smarter than the
-            last.</strong
-          >
+          Most days I'm out on the line — maintaining the rails that move freight
+          across the country. It's physical, demanding work that leaves little
+          margin for error. But when the shift ends and I'm back home, I open my
+          laptop and build.
         </p>
-        <p class="intro-paragraph">
-          Picture this: A co-pilot that not only guides you but actually
-          <span class="highlighted-text">understands</span> you. One that
-          remembers your favorite coffee shop, knows when you need gas, and
-          reminds you about the dry cleaning you've been putting off – all while
-          keeping your eyes on the road and hands on the wheel. This isn't just
-          navigation; it's the future of driving, and it's already here.
+        <p>
+          I taught myself to code because I wanted to create things that last
+          longer than a shift. Things people can carry in their pocket. My goal
+          is to eventually make the leap to <strong>full-time software
+          development</strong> — trading the wrench for a standing desk, not
+          because the railroad isn't honorable work, but because I feel most
+          alive when I'm solving a problem with software.
+        </p>
+        <p>
+          I build mobile apps with <strong>React Native &amp; Expo</strong>, wrangle
+          data with <strong>Python</strong>, and care deeply about tools that are
+          simple, useful, and don't get in the way. My current project is
+          <strong>Olive Branch</strong> — a clean, offline-first Bible reader for
+          the 2001 Translation.
         </p>
       </div>
-    </header>
-
-    <section class="stats-section">
-      <div class="stat">
-        <span class="stat-number">89%</span>
-        <span class="stat-label">Reduced Missed Stops</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">45min</span>
-        <span class="stat-label">Weekly Time Saved</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">100%</span>
-        <span class="stat-label">Hands-Free Operation</span>
-      </div>
-    </section>
-
-    <section>
-      <h2>Experience the Future of Navigation</h2>
-      <div class="video-container">
-        <video width="100%" controls poster="video-thumbnail.png">
-          <source src="rewatchman-video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div class="video-overlay">
-          <div class="play-button"></div>
+      <div class="track-stats">
+        <div class="track-stat">
+          <span class="value">React Native</span>
+          <span class="label">Primary Stack</span>
+        </div>
+        <div class="track-stat">
+          <span class="value">Python</span>
+          <span class="label">Scripting &amp; Data</span>
+        </div>
+        <div class="track-stat">
+          <span class="value">Self-Taught</span>
+          <span class="label">Origin Story</span>
         </div>
       </div>
     </section>
 
-    <section>
-      <h2>Your Driving Experience, Reimagined</h2>
-      <p style="font-size: 1.1rem; line-height: 1.8">
-        Traditional GPS apps treat every driver the same. They react to your
-        commands but never learn from them. Rewatchman is different. It's not
-        just another app on your dashboard – it's your personal driving
-        assistant that grows smarter with every mile you drive.
+    <hr class="divider" />
+
+    <!-- Projects -->
+    <section id="projects">
+      <p class="section-label">Projects</p>
+      <h2>Things I've built</h2>
+
+      <div class="project-card">
+        <div class="project-card-top">
+          <span class="project-name">Olive Branch</span>
+          <span class="project-tag">Active</span>
+        </div>
+        <p class="project-desc">
+          An offline-first Bible reader for the 2001 Translation — the
+          freshest English rendering of the ancient texts. Features
+          multiple divine name preferences, bookmarks, chapter
+          completion tracking, and over-the-air content updates.
+        </p>
+        <div class="project-stack">
+          <span class="stack-pill">React Native</span>
+          <span class="stack-pill">Expo</span>
+          <span class="stack-pill">SQLite</span>
+          <span class="stack-pill">Python scraper</span>
+          <span class="stack-pill">Zustand</span>
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="divider" />
+
+    <!-- Resources -->
+    <section id="resources">
+      <p class="section-label">Resources</p>
+      <h2>Sites I return to</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.75rem; line-height: 1.7;">
+        These are places I genuinely find valuable — spiritual writing and community
+        run by Robert King, a Bible scholar whose work I respect.
       </p>
-      <ul>
+      <ul class="resource-list">
         <li>
-          <span class="highlighted-text">Predictive Intelligence:</span>
-          Automatically suggests taking the highway at rush hour because it
-          knows you value saving time over fuel efficiency on Tuesdays
+          <a href="https://e-watchman.com/" target="_blank" rel="noopener">
+            <div class="resource-info">
+              <span class="resource-name">e-watchman.com</span>
+              <span class="resource-desc">In-depth scriptural commentary and prophetic analysis</span>
+            </div>
+            <span class="resource-arrow">↗</span>
+          </a>
         </li>
         <li>
-          <span class="highlighted-text">Context-Aware Reminders:</span> Sees
-          you're on route to the store and reminds you about the grocery list
-          you saved three days ago
+          <a href="https://jehovah-is-king.com/" target="_blank" rel="noopener">
+            <div class="resource-info">
+              <span class="resource-name">Jehovah Is King</span>
+              <span class="resource-desc">Robert King's book — available to read online</span>
+            </div>
+            <span class="resource-arrow">↗</span>
+          </a>
         </li>
         <li>
-          <span class="highlighted-text">Proactive Safety:</span> Warns about
-          school zones, construction, and road hazards before you encounter them
-          – not as you approach
+          <a href="https://e-jehovahs-witnesses.com/index.php" target="_blank" rel="noopener">
+            <div class="resource-info">
+              <span class="resource-name">e-Jehovah's Witnesses Forum</span>
+              <span class="resource-desc">Community discussion forum, also run by Robert King</span>
+            </div>
+            <span class="resource-arrow">↗</span>
+          </a>
         </li>
         <li>
-          <span class="highlighted-text">Smart Business Integration:</span>
-          Discovers local businesses that match your interests and integrates
-          them seamlessly into your route
-        </li>
-        <li>
-          <span class="highlighted-text">Voice-First Design:</span> Natural
-          conversations with AI that understands intent, not just commands
+          <a href="https://2001translation.org/" target="_blank" rel="noopener">
+            <div class="resource-info">
+              <span class="resource-name">2001 Translation</span>
+              <span class="resource-desc">The Bible translation used in Olive Branch — fresh, readable, and free</span>
+            </div>
+            <span class="resource-arrow">↗</span>
+          </a>
         </li>
       </ul>
     </section>
 
-    <section>
-      <h2>Powerful Features That Transform Your Drive</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>🧠 Memory That Matters</h3>
-          <p>
-            Your driving habits, preferred stops, and daily routines are
-            remembered and optimized. It's like having a personal assistant who
-            knows your life's roadmap.
-          </p>
-        </div>
-        <div class="feature-card">
-          <h3>💬 Natural Language Control</h3>
-          <p>
-            Speak naturally – "Find a coffee shop with a drive-thru that's on my
-            way to work" – and let AI handle the complexity while you focus on
-            driving.
-          </p>
-        </div>
-        <div class="feature-card">
-          <h3>🗺️ Dynamic Route Intelligence</h3>
-          <p>
-            Routes adapt in real-time based on traffic, weather, and your
-            priorities. Never miss an important stop or get stuck in unexpected
-            congestion.
-          </p>
-        </div>
-        <div class="feature-card">
-          <h3>💰 Smart Business Discovery</h3>
-          <p>
-            Discover relevant local businesses and exclusive offers along your
-            route, turning every drive into an opportunity.
-          </p>
-        </div>
+    <hr class="divider" />
+
+    <!-- Support -->
+    <section id="support">
+      <p class="section-label">Support</p>
+      <div class="support-card">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">☕</div>
+        <h2 style="margin-bottom: 0;">Buy me a coffee</h2>
+        <p>
+          I build in whatever hours the railroad doesn't take. If something
+          I've made has been useful to you, a small contribution goes a long
+          way toward more late nights and better software.
+        </p>
+        <a href="https://buymeacoffee.com/jahrule" target="_blank" rel="noopener" class="btn btn-primary">
+          Support on Buy Me a Coffee
+        </a>
       </div>
-    </section>
-
-    <section class="mockup">
-      <h2>Seamless Integration, Beautiful Interface</h2>
-      <img src="hub_example.png" alt="Rewatchman App Interface" />
-    </section>
-
-    <section>
-      <h2>Solving the Problems That Matter</h2>
-      <p style="font-size: 1.1rem; margin-bottom: 2rem">
-        We're not just building another navigation app. We're solving real
-        problems that affect millions of drivers every day:
-      </p>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>No More Forgotten Errands</h3>
-          <p>
-            Never drive past the grocery store again when you needed milk.
-            Rewatchman remembers for you.
-          </p>
-        </div>
-        <div class="feature-card">
-          <h3>Zero Distraction Navigation</h3>
-          <p>
-            Voice-first design means your hands stay on the wheel and eyes on
-            the road, always.
-          </p>
-        </div>
-        <div class="feature-card">
-          <h3>Personalized Efficiency</h3>
-          <p>
-            Every route is optimized for your specific needs, saving you time
-            and reducing stress.
-          </p>
-        </div>
-        <div class="feature-card">
-          <h3>Context-Aware Alerts</h3>
-          <p>
-            Get reminders when and where you need them, not just when you ask
-            for them.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="audience-section">
-      <h2>Built for Drivers Who Want More</h2>
-      <p style="font-size: 1.1rem; margin-bottom: 2rem">
-        <strong
-          >Rewatchman isn't just for techies – it's for anyone who sees their
-          car as more than just transportation.</strong
-        >
-      </p>
-      <ul>
-        <li>
-          <span class="highlighted-text">Busy Parents:</span> Juggling school
-          runs, activities, and errands? Let Rewatchman optimize your chaos.
-        </li>
-        <li>
-          <span class="highlighted-text">Gig Workers:</span> Maximize efficiency
-          with smart routing that understands delivery patterns and
-          time-sensitive jobs.
-        </li>
-        <li>
-          <span class="highlighted-text">Business Professionals:</span> Turn
-          commute time into productive time with voice-controlled task
-          management and meeting prep.
-        </li>
-        <li>
-          <span class="highlighted-text">Local Business Owners:</span> Reach
-          customers when they're most receptive – right when they're nearby.
-        </li>
-      </ul>
-      <p>
-        Rewatchman adapts to your lifestyle, not the other way around. Whether
-        you're a road warrior or a weekend adventurer, this is the co-pilot
-        you've been waiting for.
-      </p>
-    </section>
-
-    <section>
-      <h2>Be the First to Experience Intelligent Driving</h2>
-      <p style="text-align: center; font-size: 1.3rem; margin-bottom: 2rem">
-        Join the revolution in navigation. Be among the first to transform your
-        daily drive.
-      </p>
-      <form
-        action="https://formspree.io/f/mvgappvd"
-        method="POST"
-        class="form-container"
-      >
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter your email to join the waitlist..."
-          required
-        />
-        <button type="submit">Get Early Access</button>
-      </form>
-      <p style="text-align: center; margin-top: 1rem; opacity: 0.7">
-        🚀 Limited spots available for our beta launch
-      </p>
-    </section>
-
-    <section style="text-align: center; margin-top: 4rem">
-      <h2>Questions?</h2>
-      <p>We'd love to hear from you</p>
-      <a
-        href="mailto:anzwertree@gmail.com"
-        style="color: #61dafb; text-decoration: none; font-size: 1.2rem"
-        >anzwertree@gmail.com</a
-      >
     </section>
 
     <footer>
-      <p>© 2025 Rewatchman. All rights reserved.</p>
-      <p style="opacity: 0.6; font-size: 0.8rem">
-        Building the future of intelligent navigation, one drive at a time.
+      <p>
+        Built by Jahrule &nbsp;·&nbsp;
+        <a href="mailto:anzwertree@gmail.com">anzwertree@gmail.com</a>
+        &nbsp;·&nbsp;
+        <a href="https://buymeacoffee.com/jahrule" target="_blank" rel="noopener">☕ Buy me a coffee</a>
       </p>
     </footer>
+
   </body>
 </html>
