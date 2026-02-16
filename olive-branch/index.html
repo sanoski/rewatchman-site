@@ -538,16 +538,29 @@
 
     /* Mobile adjustments */
     @media (max-width: 600px) {
+      .carousel-stage { height: 440px; }
+
+      /* Hide the entire track when focused so nothing bleeds through */
+      .carousel-stage.focused .carousel-track { opacity: 0; pointer-events: none; }
+
       .carousel-focus-overlay {
         flex-direction: column;
-        gap: 1.25rem;
-        padding: 1rem;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem 1.5rem;
         overflow-y: auto;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 1.5rem;
+        background: var(--bg);
       }
-      .focus-phone-wrap { width: 130px; }
-      .focus-detail { max-width: 100%; transform: translateY(12px); }
+      .focus-phone-wrap { width: 120px; flex-shrink: 0; }
+      .focus-detail {
+        max-width: 100%;
+        transform: translateY(12px);
+        text-align: center;
+      }
       .carousel-focus-overlay.visible .focus-detail { transform: translateY(0); }
-      .carousel-stage { height: 420px; }
+      .focus-close { top: 0.75rem; right: 0.75rem; }
     }
 
     /* ── TRANSLATION CALLOUT ── */
