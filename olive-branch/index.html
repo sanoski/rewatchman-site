@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olive Branch — Bible Study App</title>
+  <meta name="description" content="A clean, offline-first Bible reading app built around the 2001 Translation. Study plans, verse search, streaks, and more. Free for Android." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --surface2: #181b22;
+      --border: rgba(255,255,255,0.07);
+      --accent: #7c6af7;
+      --accent2: #5eead4;
+      --green: #4ade80;
+      --text: #e8eaf0;
+      --text-secondary: #8b8fa8;
+      --text-muted: #4a4e63;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+    }
+    nav .inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .wordmark {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    nav .wordmark span { color: var(--accent2); }
+    nav ul { list-style: none; display: flex; gap: 1.75rem; }
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* ── Shared layout ── */
+    .wide { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+    .narrow { max-width: 700px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.6rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #6a59e0; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,106,247,0.3); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .btn-lg { padding: 1rem 2rem; font-size: 1rem; border-radius: 10px; }
+
+    /* ── HERO ── */
+    .hero-wrap {
+      position: relative;
+      padding: 6rem 1.5rem 5rem;
+      overflow: hidden;
+    }
+    .hero-wrap::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(ellipse, rgba(124,106,247,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent2);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--accent2);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* Phone mockup row */
+    .hero-phones {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .phone-frame {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    }
+    .phone-frame img {
+      display: block;
+      width: 100%;
+    }
+    .phone-frame.main { width: 175px; }
+    .phone-frame.side { width: 145px; margin-bottom: 20px; }
+    .phone-frame.far-side { width: 125px; margin-bottom: 40px; opacity: 0.7; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 1.5rem;
+    }
+    .trust-bar-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .trust-item .icon {
+      font-size: 1rem;
+      color: var(--accent2);
+    }
+    .trust-sep {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+    }
+
+    /* ── FEATURE SHOWCASE ── */
+    .feature-section {
+      padding: 6rem 1.5rem;
+    }
+    .feature-section h2 {
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .feature-section .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Feature rows — alternating layout */
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 6rem;
+    }
+    .feature-row.reverse { direction: rtl; }
+    .feature-row.reverse > * { direction: ltr; }
+
+    .feature-text .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      background: rgba(124,106,247,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 3px 10px;
+      border: 1px solid rgba(124,106,247,0.2);
+      display: inline-block;
+      margin-bottom: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .feature-text h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .feature-text p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+    }
+    .feature-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .feature-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.925rem;
+      color: var(--text-secondary);
+    }
+    .feature-bullets li::before {
+      content: '→';
+      color: var(--accent2);
+      flex-shrink: 0;
+      margin-top: 0.05em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .feature-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .feature-phone {
+      width: 200px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+    .feature-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(124,106,247,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .feature-glow.teal {
+      background: radial-gradient(ellipse, rgba(94,234,212,0.08) 0%, transparent 70%);
+    }
+
+    /* ── FULL-WIDTH SCREENSHOT STRIP ── */
+    .screenshot-strip {
+      padding: 3rem 0 5rem;
+      overflow: hidden;
+    }
+    .strip-label {
+      max-width: 1000px;
+      margin: 0 auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+    .strip-scroll {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1rem 3rem 2rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+    }
+    .strip-scroll::-webkit-scrollbar { display: none; }
+    .strip-phone {
+      flex-shrink: 0;
+      width: 160px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      display: block;
+      scroll-snap-align: start;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .strip-phone:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 28px 60px rgba(0,0,0,0.5);
+    }
+
+    /* ── TRANSLATION CALLOUT ── */
+    .translation-callout {
+      padding: 5rem 1.5rem;
+    }
+    .callout-card {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .callout-card::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(ellipse, rgba(94,234,212,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .callout-quote {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .callout-quote em {
+      font-style: normal;
+      color: var(--accent2);
+    }
+    .callout-body {
+      color: var(--text-secondary);
+      font-size: 0.975rem;
+      line-height: 1.8;
+    }
+    .callout-body p + p { margin-top: 1rem; }
+    .callout-features {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .callout-feature {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .callout-feature .cf-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .callout-feature h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .callout-feature p {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── STATS ROW ── */
+    .stats-section {
+      padding: 4rem 1.5rem;
+    }
+    .stats-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent2);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      padding: 6rem 1.5rem 8rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(124,106,247,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-final h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    .cta-final h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-final p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+      position: relative;
+    }
+    .cta-final .btn-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.825rem;
+    }
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: var(--text); }
+
+    /* ── Scroll-reveal animations ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-phones .far-side { display: none; }
+      .feature-row { grid-template-columns: 1fr; gap: 2.5rem; }
+      .feature-row.reverse { direction: ltr; }
+      .callout-card { grid-template-columns: 1fr; gap: 2rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .trust-sep { display: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .phone-frame.side { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="inner">
+      <a href="https://rewatchman.com" class="wordmark">jahrule<span>.dev</span></a>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#translation">Translation</a></li>
+        <li><a href="#download">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <div class="hero-wrap">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-eyebrow reveal">Free Android App</p>
+        <h1 class="reveal delay-1">The Bible in your pocket.<br /><em>No internet required.</em></h1>
+        <p class="hero-desc reveal delay-2">
+          Olive Branch is a clean, distraction-free Bible reader built around the
+          2001 Translation — a fresh, scholarly English rendering from the original
+          manuscripts. Offline from the start. No account. No ads.
+        </p>
+        <div class="hero-cta reveal delay-3">
+          <a href="https://github.com/sanoski/Olive-Branch-alpha/releases/tag/v1.0.1" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+            ↓ Download APK
+          </a>
+          <a href="https://github.com/sanoski/Olive-Branch-alpha" class="btn btn-ghost btn-lg" target="_blank" rel="noopener">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-phones reveal-right delay-2">
+        <div class="phone-frame far-side">
+          <img src="../screenshots/Olive-Branch-study-preset.png" alt="Study plan presets" />
+        </div>
+        <div class="phone-frame main">
+          <img src="../screenshots/Olive-Branch-home.png" alt="Olive Branch home screen" />
+        </div>
+        <div class="phone-frame side">
+          <img src="../screenshots/Olive-Branch-settings-devine-name.png" alt="Divine name preferences" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TRUST BAR ── -->
+  <div class="trust-bar">
+    <div class="trust-bar-inner">
+      <div class="trust-item"><span class="icon">📴</span> 100% offline</div>
+      <div class="trust-sep"></div>
+      <div class="trust-item"><span class="icon">🆓</span> Free, no account</div>
+      <div class="trust-sep"></div>
+      <div class="trust-item"><span class="icon">📖</span> 2001 Translation</div>
+      <div class="trust-sep"></div>
+      <div class="trust-item"><span class="icon">🤖</span> Android</div>
+      <div class="trust-sep"></div>
+      <div class="trust-item"><span class="icon">⚡</span> Open source</div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── FEATURES ── -->
+  <div id="features" class="feature-section wide">
+    <div class="reveal">
+      <p class="section-label">Features</p>
+      <h2>Everything you need. Nothing you don't.</h2>
+      <p class="subtitle">Built for actual daily use — reading, studying, tracking progress, and staying consistent.</p>
+    </div>
+
+    <!-- Feature 1 — Reading -->
+    <div class="feature-row">
+      <div class="feature-text reveal-left">
+        <span class="tag">Reading</span>
+        <h3>Pick up right where you left off</h3>
+        <p>
+          Olive Branch remembers your place down to the verse. The Home screen shows
+          exactly where you are with one tap to jump back in — no hunting through
+          chapter lists.
+        </p>
+        <ul class="feature-bullets">
+          <li>Continue Reading card always visible on Home</li>
+          <li>In Progress badge on books you've started</li>
+          <li>Light, dark, and sepia reading themes</li>
+          <li>Adjustable font size with live preview</li>
+          <li>Toggle verse numbers on or off</li>
+          <li>Continuous scroll through chapters</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal-right">
+        <div class="feature-glow"></div>
+        <img class="feature-phone" src="../screenshots/Olive-Branch-book-select.png" alt="Book selection with In Progress badges" />
+      </div>
+    </div>
+
+    <!-- Feature 2 — Plans -->
+    <div class="feature-row reverse">
+      <div class="feature-text reveal-right">
+        <span class="tag">Study Plans</span>
+        <h3>A reading plan that fits how you actually live</h3>
+        <p>
+          Choose a preset or build a completely custom plan — pick the books you want,
+          set your own deadline, and the app calculates your daily pace automatically.
+        </p>
+        <ul class="feature-bullets">
+          <li>Full Bible in 1 Year, Full Bible in 2 Years</li>
+          <li>New Testament in 90 or 30 Days</li>
+          <li>Prophets or Psalms in 30 Days</li>
+          <li>Custom: any books, any deadline</li>
+          <li>Daily progress bar and chapters-to-go counter</li>
+          <li>Streak tracking across your whole reading history</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal-left">
+        <div class="feature-glow teal"></div>
+        <img class="feature-phone" src="../screenshots/Olive-Branch-study-preset.png" alt="Built-in study plan presets" />
+      </div>
+    </div>
+
+    <!-- Feature 3 — Search -->
+    <div class="feature-row">
+      <div class="feature-text reveal-left">
+        <span class="tag">Search</span>
+        <h3>Find any verse in seconds</h3>
+        <p>
+          Full-text search across the entire Bible — all 1,200+ chapters, indexed
+          locally. No network request, no delay. Just results.
+        </p>
+        <ul class="feature-bullets">
+          <li>Search across all 66+ books simultaneously</li>
+          <li>Results show book, chapter, and full verse text</li>
+          <li>Tap any result to jump directly to it</li>
+          <li>Works completely offline</li>
+        </ul>
+      </div>
+      <div class="feature-visual reveal-right">
+        <div class="feature-glow"></div>
+        <img class="feature-phone" src="../screenshots/Olive-Branch-book-search.png" alt="Verse search screen" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ALL SCREENSHOTS STRIP ── -->
+  <div class="screenshot-strip">
+    <div class="strip-label reveal">
+      <p class="section-label">App Tour</p>
+      <h2 style="font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em;">See every screen</h2>
+    </div>
+    <div class="strip-scroll">
+      <img class="strip-phone" src="../screenshots/Olive-Branch-home.png" alt="Home screen" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-book-select.png" alt="Book selection" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-book-search.png" alt="Verse search" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-study-type.png" alt="Study plan type" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-study-preset.png" alt="Study presets" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-custom.png" alt="Custom plan builder" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-study-length.png" alt="Plan duration" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-settings-toggles.png" alt="Display settings" />
+      <img class="strip-phone" src="../screenshots/Olive-Branch-settings-devine-name.png" alt="Name preferences" />
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── TRANSLATION CALLOUT ── -->
+  <div id="translation" class="translation-callout">
+    <div class="callout-card">
+      <div class="reveal-left">
+        <p class="section-label">The 2001 Translation</p>
+        <p class="callout-quote">A translation that doesn't <em>soften</em> the original.</p>
+        <div class="callout-body">
+          <p>
+            Most English Bibles carry centuries of tradition — and centuries of translators
+            making choices that obscure what the original text actually says. The 2001
+            Translation starts fresh from the Greek and Hebrew manuscripts, prioritizing
+            accuracy over familiarity.
+          </p>
+          <p>
+            Olive Branch is built specifically for this translation, preserving every
+            detail that makes it distinct.
+          </p>
+        </div>
+      </div>
+      <div class="callout-features reveal-right delay-1">
+        <div class="callout-feature">
+          <span class="cf-icon">✍️</span>
+          <div>
+            <h4>Divine Name Preference</h4>
+            <p>Choose how God's name appears — Jehovah, Yahweh, or LORD — across every book.</p>
+          </div>
+        </div>
+        <div class="callout-feature">
+          <span class="cf-icon">📜</span>
+          <div>
+            <h4>Book "About" Sections</h4>
+            <p>Introductory notes and per-chapter context notes, with tappable cross-references.</p>
+          </div>
+        </div>
+        <div class="callout-feature">
+          <span class="cf-icon">🔗</span>
+          <div>
+            <h4>Inline Cross-References</h4>
+            <p>Footnote and cross-reference links navigate directly to the referenced passage.</p>
+          </div>
+        </div>
+        <div class="callout-feature">
+          <span class="cf-icon">🔄</span>
+          <div>
+            <h4>Silent Database Updates</h4>
+            <p>When the translation is updated, the app downloads the new text automatically in the background.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STATS ── -->
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card reveal delay-1">
+        <span class="stat-value">66+</span>
+        <span class="stat-label">Books</span>
+      </div>
+      <div class="stat-card reveal delay-2">
+        <span class="stat-value">1213</span>
+        <span class="stat-label">Chapters</span>
+      </div>
+      <div class="stat-card reveal delay-3">
+        <span class="stat-value">6</span>
+        <span class="stat-label">Preset Plans</span>
+      </div>
+      <div class="stat-card reveal delay-4">
+        <span class="stat-value">0</span>
+        <span class="stat-label">Ads / Accounts</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── FINAL CTA ── -->
+  <div id="download" class="cta-final">
+    <h2 class="reveal">Start reading.<br /><em>It's free.</em></h2>
+    <p class="reveal delay-1">
+      Download the APK, install it on your Android device, and it works —
+      no setup, no login, no subscription. Just the Bible.
+    </p>
+    <div class="btn-row reveal delay-2">
+      <a href="https://github.com/sanoski/Olive-Branch-alpha/releases/tag/v1.0.1" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+        ↓ Download for Android
+      </a>
+      <a href="https://github.com/sanoski/Olive-Branch-alpha" class="btn btn-ghost btn-lg" target="_blank" rel="noopener">
+        Source on GitHub ↗
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      Olive Branch is built by <a href="https://rewatchman.com">Jahrule</a> &nbsp;·&nbsp;
+      Bible text from the <a href="https://2001translation.org" target="_blank" rel="noopener">2001 Translation</a> (CC BY-NC-ND 4.0)
+      &nbsp;·&nbsp;
+      <a href="https://github.com/sanoski/Olive-Branch-alpha" target="_blank" rel="noopener">Open Source</a>
+    </p>
+  </footer>
+
+  <script>
+    // Scroll-reveal using IntersectionObserver
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Auto-scroll the screenshot strip gently on load
+    const strip = document.querySelector('.strip-scroll');
+    if (strip) {
+      let pos = 0;
+      let paused = false;
+      strip.addEventListener('mouseenter', () => paused = true);
+      strip.addEventListener('mouseleave', () => paused = false);
+      strip.addEventListener('touchstart', () => paused = true);
+      setInterval(() => {
+        if (!paused) {
+          pos += 0.5;
+          if (pos >= strip.scrollWidth - strip.clientWidth) pos = 0;
+          strip.scrollLeft = pos;
+        }
+      }, 16);
+    }
+  </script>
+
+</body>
+</html>
