@@ -340,10 +340,9 @@
     /* ── CAROUSEL ── */
     .carousel-section {
       padding: 4rem 0 5rem;
-      overflow: hidden;
     }
     .carousel-label {
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto 2.5rem;
       padding: 0 1.5rem;
     }
@@ -356,18 +355,19 @@
     /* Stage holds the visible window + edge fades */
     .carousel-stage {
       position: relative;
-      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
       height: 360px;
       overflow: hidden;
     }
-    /* Edge fade gradients */
+    /* Edge fade gradients — start at stage edge, clear by ~120px in */
     .carousel-stage::before,
     .carousel-stage::after {
       content: '';
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 140px;
+      width: 120px;
       z-index: 3;
       pointer-events: none;
       transition: opacity 0.4s;
@@ -383,14 +383,12 @@
     .carousel-stage.focused::before,
     .carousel-stage.focused::after { opacity: 0; }
 
-    /* The track that slides */
+    /* The track — width set by JS to fit all cloned cards */
     .carousel-track {
       display: flex;
       gap: 24px;
       align-items: center;
-      padding: 0 calc(50% - 240px);
       height: 100%;
-      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
       will-change: transform;
     }
 
@@ -540,17 +538,16 @@
     @media (max-width: 600px) {
       .carousel-stage { height: 440px; }
 
-      /* Hide the entire track when focused so nothing bleeds through */
+      /* Hide track when focused so nothing bleeds through */
       .carousel-stage.focused .carousel-track { opacity: 0; pointer-events: none; }
 
       .carousel-focus-overlay {
         flex-direction: column;
         gap: 1rem;
-        padding: 1.25rem 1.5rem 1.5rem;
+        padding: 1.5rem;
         overflow-y: auto;
         align-items: center;
         justify-content: flex-start;
-        padding-top: 1.5rem;
         background: var(--bg);
       }
       .focus-phone-wrap { width: 120px; flex-shrink: 0; }
@@ -1116,102 +1113,152 @@
       { tag: 'Translation',  title: 'Faithful to the original text', desc: 'Choose how God\'s name appears throughout the Bible: Jehovah, Yahweh, or LORD. Jesus or Yeshua. Applied across every book instantly.' },
     ];
 
-    const track     = document.getElementById('carouselTrack');
-    const stage     = document.getElementById('carouselStage');
-    const overlay   = document.getElementById('focusOverlay');
-    const focusImg  = document.getElementById('focusImg');
-    const focusTag  = document.getElementById('focusTag');
-    const focusTitle= document.getElementById('focusTitle');
-    const focusDesc = document.getElementById('focusDesc');
-    const closeBtn  = document.getElementById('focusClose');
-    const dotsWrap  = document.getElementById('carouselDots');
-    const phones    = Array.from(document.querySelectorAll('.c-phone'));
+    const track      = document.getElementById('carouselTrack');
+    const stage      = document.getElementById('carouselStage');
+    const overlay    = document.getElementById('focusOverlay');
+    const focusImg   = document.getElementById('focusImg');
+    const focusTag   = document.getElementById('focusTag');
+    const focusTitle = document.getElementById('focusTitle');
+    const focusDesc  = document.getElementById('focusDesc');
+    const closeBtn   = document.getElementById('focusClose');
+    const dotsWrap   = document.getElementById('carouselDots');
 
-    const PHONE_W   = 150;
-    const GAP       = 24;
-    const STEP      = PHONE_W + GAP;
-    let current     = 0;
-    let timer       = null;
-    let focused     = false;
+    const PHONE_W = 150;
+    const GAP     = 24;
+    const STEP    = PHONE_W + GAP;   // 174px per card
+    const SPEED   = 0.4;             // px per frame (~24px/s at 60 fps)
 
-    // Build dots
-    phones.forEach((_, i) => {
+    // Grab original cards and clone them for infinite loop
+    const origCards = Array.from(track.querySelectorAll('.c-phone'));
+    const N = origCards.length;
+    const loopWidth = N * STEP;      // width of one full set
+
+    origCards.forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.dataset.clone = 'true';
+      track.appendChild(clone);
+    });
+
+    // Build dots (one per original card)
+    origCards.forEach((_, i) => {
       const d = document.createElement('div');
       d.className = 'c-dot' + (i === 0 ? ' active' : '');
-      d.addEventListener('click', () => { if (!focused) goTo(i); });
+      d.addEventListener('click', () => {
+        if (isFocused) return;
+        // Jump position so that card i is near the left of visible area
+        offsetX = i * STEP;
+      });
       dotsWrap.appendChild(d);
     });
     const dots = Array.from(dotsWrap.querySelectorAll('.c-dot'));
 
-    function goTo(index) {
-      current = index;
-      // Center the active card
-      const offset = index * STEP;
-      track.style.transform = `translateX(-${offset}px)`;
-      dots.forEach((d, i) => d.classList.toggle('active', i === index));
-    }
+    let offsetX   = 0;
+    let paused    = false;
+    let isFocused = false;
+    let rafId     = null;
 
-    function startAuto() {
-      stopAuto();
-      timer = setInterval(() => {
-        goTo((current + 1) % phones.length);
-      }, 2800);
-    }
+    // Dot update (cheap — runs every ~150ms)
+    setInterval(() => {
+      const idx = Math.floor(((offsetX % loopWidth) + loopWidth) % loopWidth / STEP) % N;
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }, 150);
 
-    function stopAuto() {
-      clearInterval(timer);
-      timer = null;
+    function tick() {
+      if (!paused) {
+        offsetX += SPEED;
+        if (offsetX >= loopWidth) offsetX -= loopWidth;
+        track.style.transform = `translateX(-${offsetX}px)`;
+      }
+      rafId = requestAnimationFrame(tick);
     }
+    rafId = requestAnimationFrame(tick);
 
-    function openFocus(index) {
-      focused = true;
-      stopAuto();
-      const d = screenData[index];
-      focusImg.src  = phones[index].querySelector('img').src;
-      focusImg.alt  = phones[index].querySelector('img').alt;
+    // Focus overlay helpers
+    function openFocus(origIndex) {
+      isFocused = true;
+      paused = true;
+      const d = screenData[origIndex];
+      const src = origCards[origIndex].querySelector('img').src;
+      focusImg.src = src;
+      focusImg.alt = origCards[origIndex].querySelector('img').alt;
       focusTag.textContent   = d.tag;
       focusTitle.textContent = d.title;
       focusDesc.textContent  = d.desc;
-      phones.forEach((p, i) => p.classList.toggle('active', i === index));
+      // Mark active on ALL cards with this origIndex (original + clone)
+      Array.from(track.querySelectorAll('.c-phone')).forEach(p => {
+        p.classList.toggle('active', parseInt(p.dataset.index) === origIndex);
+      });
       stage.classList.add('focused');
-      // Small delay so the track fades first, then overlay appears
       setTimeout(() => overlay.classList.add('visible'), 80);
     }
 
     function closeFocus() {
-      focused = false;
+      isFocused = false;
       overlay.classList.remove('visible');
       setTimeout(() => {
         stage.classList.remove('focused');
-        phones.forEach(p => p.classList.remove('active'));
-        startAuto();
+        Array.from(track.querySelectorAll('.c-phone')).forEach(p => p.classList.remove('active'));
+        paused = false;
       }, 400);
     }
 
-    phones.forEach((p, i) => {
-      p.addEventListener('click', () => {
-        if (focused) return;
-        goTo(i);
-        setTimeout(() => openFocus(i), 200);
-      });
+    // Click on any card (original or clone)
+    track.addEventListener('click', e => {
+      if (isFocused) return;
+      const card = e.target.closest('.c-phone');
+      if (!card) return;
+      openFocus(parseInt(card.dataset.index));
     });
 
-    closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeFocus(); });
-    stage.addEventListener('click', (e) => {
-      if (focused && !overlay.contains(e.target)) closeFocus();
+    // Close handlers
+    closeBtn.addEventListener('click', e => { e.stopPropagation(); closeFocus(); });
+    stage.addEventListener('click', e => {
+      if (isFocused && !overlay.contains(e.target)) closeFocus();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && isFocused) closeFocus();
     });
 
-    // Keyboard dismiss
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && focused) closeFocus();
-    });
+    // Pause on hover (desktop)
+    stage.addEventListener('mouseenter', () => { if (!isFocused) paused = true; });
+    stage.addEventListener('mouseleave', () => { if (!isFocused) paused = false; });
 
-    // Pause on hover
-    stage.addEventListener('mouseenter', () => { if (!focused) stopAuto(); });
-    stage.addEventListener('mouseleave', () => { if (!focused) startAuto(); });
+    // Touch swipe (mobile)
+    let touchStartX = 0;
+    let touchStartOffset = 0;
+    let isSwiping = false;
 
-    goTo(0);
-    startAuto();
+    stage.addEventListener('touchstart', e => {
+      if (isFocused) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartOffset = offsetX;
+      paused = true;
+      isSwiping = true;
+    }, { passive: true });
+
+    stage.addEventListener('touchmove', e => {
+      if (!isSwiping || isFocused) return;
+      const dx = touchStartX - e.touches[0].clientX;
+      offsetX = touchStartOffset + dx;
+      // Keep in loopable range
+      offsetX = ((offsetX % loopWidth) + loopWidth) % loopWidth;
+      track.style.transform = `translateX(-${offsetX}px)`;
+    }, { passive: true });
+
+    stage.addEventListener('touchend', e => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      // Check if tap (very small movement) — open focus
+      const dx = Math.abs(touchStartX - (e.changedTouches[0]?.clientX ?? touchStartX));
+      if (dx < 8) {
+        const card = e.target.closest('.c-phone');
+        if (card) { openFocus(parseInt(card.dataset.index)); return; }
+      }
+      // Snap to nearest card
+      offsetX = Math.round(offsetX / STEP) * STEP;
+      offsetX = ((offsetX % loopWidth) + loopWidth) % loopWidth;
+      paused = false;
+    }, { passive: true });
   </script>
 
 </body>
