@@ -337,39 +337,217 @@
       background: radial-gradient(ellipse, rgba(94,234,212,0.08) 0%, transparent 70%);
     }
 
-    /* ── FULL-WIDTH SCREENSHOT STRIP ── */
-    .screenshot-strip {
-      padding: 3rem 0 5rem;
+    /* ── CAROUSEL ── */
+    .carousel-section {
+      padding: 4rem 0 5rem;
       overflow: hidden;
     }
-    .strip-label {
+    .carousel-label {
       max-width: 1000px;
       margin: 0 auto 2.5rem;
       padding: 0 1.5rem;
     }
-    .strip-scroll {
-      display: flex;
-      gap: 1.25rem;
-      padding: 1rem 3rem 2rem;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      scroll-snap-type: x mandatory;
+    .carousel-label h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
-    .strip-scroll::-webkit-scrollbar { display: none; }
-    .strip-phone {
+
+    /* Stage holds the visible window + edge fades */
+    .carousel-stage {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      overflow: hidden;
+    }
+    /* Edge fade gradients */
+    .carousel-stage::before,
+    .carousel-stage::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 140px;
+      z-index: 3;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .carousel-stage::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
+    }
+    .carousel-stage::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
+    }
+    .carousel-stage.focused::before,
+    .carousel-stage.focused::after { opacity: 0; }
+
+    /* The track that slides */
+    .carousel-track {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      padding: 0 calc(50% - 240px);
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+      will-change: transform;
+    }
+
+    /* Individual phone card */
+    .c-phone {
       flex-shrink: 0;
-      width: 160px;
+      width: 150px;
+      cursor: pointer;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1),
+                  opacity 0.5s ease,
+                  box-shadow 0.4s ease;
       border-radius: 22px;
       border: 1px solid var(--border);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
-      display: block;
-      scroll-snap-align: start;
-      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+      overflow: hidden;
+      position: relative;
     }
-    .strip-phone:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 28px 60px rgba(0,0,0,0.5);
+    .c-phone img {
+      display: block;
+      width: 100%;
+      pointer-events: none;
+    }
+    .c-phone:hover:not(.active) {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    /* Focused / active state */
+    .carousel-stage.focused .c-phone {
+      opacity: 0;
+      transform: scale(0.88);
+      pointer-events: none;
+    }
+    .carousel-stage.focused .c-phone.active {
+      opacity: 1;
+      transform: scale(1.08);
+      pointer-events: auto;
+      box-shadow: 0 24px 64px rgba(124,106,247,0.25), 0 0 0 1px rgba(124,106,247,0.3);
+    }
+
+    /* Focus overlay: image + detail side by side */
+    .carousel-focus-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      padding: 1.5rem 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .carousel-focus-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .focus-phone-wrap {
+      flex-shrink: 0;
+      width: 160px;
+    }
+    .focus-phone-wrap img {
+      width: 100%;
+      border-radius: 22px;
+      border: 1px solid rgba(124,106,247,0.3);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+      display: block;
+    }
+    .focus-detail {
+      flex: 1;
+      max-width: 340px;
+      transform: translateX(20px);
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1) 0.1s, opacity 0.4s ease 0.1s;
+      opacity: 0;
+    }
+    .carousel-focus-overlay.visible .focus-detail {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    .focus-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      background: rgba(124,106,247,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 3px 10px;
+      border: 1px solid rgba(124,106,247,0.2);
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .focus-detail h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .focus-detail p {
+      color: var(--text-secondary);
+      font-size: 0.925rem;
+      line-height: 1.75;
+    }
+    .focus-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: color 0.2s, border-color 0.2s;
+      line-height: 1;
+    }
+    .focus-close:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    /* Dots */
+    .carousel-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .c-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: background 0.3s, transform 0.3s;
+      cursor: pointer;
+    }
+    .c-dot.active {
+      background: var(--accent);
+      transform: scale(1.4);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .carousel-focus-overlay {
+        flex-direction: column;
+        gap: 1.25rem;
+        padding: 1rem;
+        overflow-y: auto;
+      }
+      .focus-phone-wrap { width: 130px; }
+      .focus-detail { max-width: 100%; transform: translateY(12px); }
+      .carousel-focus-overlay.visible .focus-detail { transform: translateY(0); }
+      .carousel-stage { height: 420px; }
     }
 
     /* ── TRANSLATION CALLOUT ── */
@@ -738,23 +916,59 @@
     </div>
   </div>
 
-  <!-- ── ALL SCREENSHOTS STRIP ── -->
-  <div class="screenshot-strip">
-    <div class="strip-label reveal">
+  <!-- ── CAROUSEL ── -->
+  <div class="carousel-section">
+    <div class="carousel-label reveal">
       <p class="section-label">App Tour</p>
-      <h2 style="font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em;">See every screen</h2>
+      <h2>See every screen</h2>
     </div>
-    <div class="strip-scroll">
-      <img class="strip-phone" src="../screenshots/Olive-Branch-home.png" alt="Home screen" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-book-select.png" alt="Book selection" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-book-search.png" alt="Verse search" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-study-type.png" alt="Study plan type" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-study-preset.png" alt="Study presets" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-custom.png" alt="Custom plan builder" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-study-length.png" alt="Plan duration" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-settings-toggles.png" alt="Display settings" />
-      <img class="strip-phone" src="../screenshots/Olive-Branch-settings-devine-name.png" alt="Name preferences" />
+
+    <div class="carousel-stage" id="carouselStage">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="c-phone" data-index="0">
+          <img src="../screenshots/Olive-Branch-home.png" alt="Home screen" />
+        </div>
+        <div class="c-phone" data-index="1">
+          <img src="../screenshots/Olive-Branch-book-select.png" alt="Book selection" />
+        </div>
+        <div class="c-phone" data-index="2">
+          <img src="../screenshots/Olive-Branch-book-search.png" alt="Verse search" />
+        </div>
+        <div class="c-phone" data-index="3">
+          <img src="../screenshots/Olive-Branch-study-type.png" alt="Study plan type" />
+        </div>
+        <div class="c-phone" data-index="4">
+          <img src="../screenshots/Olive-Branch-study-preset.png" alt="Study presets" />
+        </div>
+        <div class="c-phone" data-index="5">
+          <img src="../screenshots/Olive-Branch-custom.png" alt="Custom plan builder" />
+        </div>
+        <div class="c-phone" data-index="6">
+          <img src="../screenshots/Olive-Branch-study-length.png" alt="Plan duration" />
+        </div>
+        <div class="c-phone" data-index="7">
+          <img src="../screenshots/Olive-Branch-settings-toggles.png" alt="Display settings" />
+        </div>
+        <div class="c-phone" data-index="8">
+          <img src="../screenshots/Olive-Branch-settings-devine-name.png" alt="Name preferences" />
+        </div>
+      </div>
+
+      <!-- Focus overlay -->
+      <div class="carousel-focus-overlay" id="focusOverlay">
+        <div class="focus-phone-wrap">
+          <img id="focusImg" src="" alt="" />
+        </div>
+        <div class="focus-detail">
+          <span class="focus-tag" id="focusTag"></span>
+          <h3 id="focusTitle"></h3>
+          <p id="focusDesc"></p>
+        </div>
+        <button class="focus-close" id="focusClose" aria-label="Close">✕</button>
+      </div>
     </div>
+
+    <div class="carousel-dots" id="carouselDots"></div>
   </div>
 
   <hr class="divider" />
@@ -876,22 +1090,115 @@
       observer.observe(el);
     });
 
-    // Auto-scroll the screenshot strip gently on load
-    const strip = document.querySelector('.strip-scroll');
-    if (strip) {
-      let pos = 0;
-      let paused = false;
-      strip.addEventListener('mouseenter', () => paused = true);
-      strip.addEventListener('mouseleave', () => paused = false);
-      strip.addEventListener('touchstart', () => paused = true);
-      setInterval(() => {
-        if (!paused) {
-          pos += 0.5;
-          if (pos >= strip.scrollWidth - strip.clientWidth) pos = 0;
-          strip.scrollLeft = pos;
-        }
-      }, 16);
+    // ── Carousel ──
+    const screenData = [
+      { tag: 'Home',         title: 'Your reading hub',             desc: 'Continue where you left off, check your reading streak, and see today\'s study plan progress — all from one screen.' },
+      { tag: 'Navigation',   title: 'Every book at your fingertips', desc: 'Browse all 66+ books, filter by Old or New Testament. Books you\'ve started show an In Progress badge so you always know where you are.' },
+      { tag: 'Search',       title: 'Find any verse instantly',      desc: 'Full-text search across all 1,200+ chapters, indexed locally on your device. No internet, no delay — just results.' },
+      { tag: 'Study Plans',  title: 'Pick your path',               desc: 'Start with a preset plan or go fully custom. Either way, the app builds a daily schedule around your goals.' },
+      { tag: 'Presets',      title: 'Six built-in plans',            desc: 'Full Bible in 1 Year, Full Bible in 2 Years, New Testament in 90 or 30 Days, The Prophets, and Psalms — ready to start immediately.' },
+      { tag: 'Custom Plan',  title: 'Your books, your order',        desc: 'Tap any combination of books from across the entire Bible. The app calculates exactly how many chapters per day you\'ll need.' },
+      { tag: 'Deadline',     title: 'Set your own timeline',         desc: 'Choose a preset duration or enter any number of days. The pace summary updates live so you know what you\'re committing to.' },
+      { tag: 'Display',      title: 'Read exactly how you like it',  desc: 'Adjust font size, toggle verse numbers, enable continuous scroll, and set a daily reminder — all in one place.' },
+      { tag: 'Translation',  title: 'Faithful to the original text', desc: 'Choose how God\'s name appears throughout the Bible — Jehovah, Yahweh, or LORD. Jesus or Yeshua. Applied across every book instantly.' },
+    ];
+
+    const track     = document.getElementById('carouselTrack');
+    const stage     = document.getElementById('carouselStage');
+    const overlay   = document.getElementById('focusOverlay');
+    const focusImg  = document.getElementById('focusImg');
+    const focusTag  = document.getElementById('focusTag');
+    const focusTitle= document.getElementById('focusTitle');
+    const focusDesc = document.getElementById('focusDesc');
+    const closeBtn  = document.getElementById('focusClose');
+    const dotsWrap  = document.getElementById('carouselDots');
+    const phones    = Array.from(document.querySelectorAll('.c-phone'));
+
+    const PHONE_W   = 150;
+    const GAP       = 24;
+    const STEP      = PHONE_W + GAP;
+    let current     = 0;
+    let timer       = null;
+    let focused     = false;
+
+    // Build dots
+    phones.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'c-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => { if (!focused) goTo(i); });
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.querySelectorAll('.c-dot'));
+
+    function goTo(index) {
+      current = index;
+      // Center the active card
+      const offset = index * STEP;
+      track.style.transform = `translateX(-${offset}px)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
     }
+
+    function startAuto() {
+      stopAuto();
+      timer = setInterval(() => {
+        goTo((current + 1) % phones.length);
+      }, 2800);
+    }
+
+    function stopAuto() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function openFocus(index) {
+      focused = true;
+      stopAuto();
+      const d = screenData[index];
+      focusImg.src  = phones[index].querySelector('img').src;
+      focusImg.alt  = phones[index].querySelector('img').alt;
+      focusTag.textContent   = d.tag;
+      focusTitle.textContent = d.title;
+      focusDesc.textContent  = d.desc;
+      phones.forEach((p, i) => p.classList.toggle('active', i === index));
+      stage.classList.add('focused');
+      // Small delay so the track fades first, then overlay appears
+      setTimeout(() => overlay.classList.add('visible'), 80);
+    }
+
+    function closeFocus() {
+      focused = false;
+      overlay.classList.remove('visible');
+      setTimeout(() => {
+        stage.classList.remove('focused');
+        phones.forEach(p => p.classList.remove('active'));
+        startAuto();
+      }, 400);
+    }
+
+    phones.forEach((p, i) => {
+      p.addEventListener('click', () => {
+        if (focused) return;
+        goTo(i);
+        setTimeout(() => openFocus(i), 200);
+      });
+    });
+
+    closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeFocus(); });
+    stage.addEventListener('click', (e) => {
+      if (focused && !overlay.contains(e.target)) closeFocus();
+    });
+
+    // Keyboard dismiss
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && focused) closeFocus();
+    });
+
+    // Pause on hover
+    stage.addEventListener('mouseenter', () => { if (!focused) stopAuto(); });
+    stage.addEventListener('mouseleave', () => { if (!focused) startAuto(); });
+
+    goTo(0);
+    startAuto();
   </script>
 
 </body>
