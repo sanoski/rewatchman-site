@@ -311,6 +311,18 @@
         padding: 2px 8px;
       }
 
+      /* ── Project card with image ── */
+      .project-card-img {
+        float: left;
+        width: 68px;
+        height: 68px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-right: 14px;
+        margin-bottom: 6px;
+      }
+      .project-card-clearfix::after { content: ''; display: table; clear: both; }
+
       /* ── Resources ── */
       .resource-list { list-style: none; }
       .resource-list li {
@@ -538,6 +550,26 @@
           <span class="stack-pill">Rich (TUI)</span>
         </div>
       </a>
+
+      <div class="project-card project-card-clearfix">
+        <img src="xgps-splash.png" alt="XGPS splash screen" class="project-card-img" />
+        <div class="project-card-top">
+          <span class="project-name">XGPS</span>
+          <span class="project-tag">Internal Tool</span>
+        </div>
+        <p class="project-desc">
+          A private field tool for railroad signal maintainers. Quickly locate
+          any lighted grade crossing in a territory, get turn-by-turn directions,
+          and reference shutdown procedures — all offline, straight from the track chart.
+        </p>
+        <div class="project-stack">
+          <span class="stack-pill">React Native</span>
+          <span class="stack-pill">Expo</span>
+          <span class="stack-pill">SQLite</span>
+          <span class="stack-pill">OpenStreetMap</span>
+          <span class="stack-pill">Leaflet.js</span>
+        </div>
+      </div>
 
     </section>
 
