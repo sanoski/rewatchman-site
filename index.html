@@ -465,10 +465,10 @@
         </p>
         <p>
           I build mobile apps with <strong>React Native &amp; Expo</strong>, wrangle
-          data with <strong>Python</strong>, and care deeply about tools that are
-          simple, useful, and don't get in the way. My current project is
-          <strong>Olive Branch</strong>, a clean offline Bible reader for
-          the 2001 Translation.
+          server-side tools with <strong>Python &amp; FastAPI</strong>, and care deeply
+          about software that is simple, useful, and doesn't get in the way. Lately I've
+          been building internal tools for railroad crews — on-call scheduling systems,
+          tie installation trackers, and automation that runs quietly in the background.
         </p>
       </div>
       <div class="track-stats">
@@ -550,6 +550,46 @@
           <span class="stack-pill">Rich (TUI)</span>
         </div>
       </a>
+
+      <div class="project-card">
+        <div class="project-card-top">
+          <span class="project-name">VRS MOW Tracker</span>
+          <span class="project-tag">Internal Tool</span>
+        </div>
+        <p class="project-desc">
+          A private web app for tracking railroad tie installation across active work projects.
+          Logs daily tie counts, equipment downtime, and crew progress. Generates weekly PDF
+          reports emailed to the crew boss. Administered entirely through Claude AI via MCP —
+          no manual UI required.
+        </p>
+        <div class="project-stack">
+          <span class="stack-pill">Python</span>
+          <span class="stack-pill">FastAPI</span>
+          <span class="stack-pill">SQLite</span>
+          <span class="stack-pill">ReportLab</span>
+          <span class="stack-pill">FastMCP</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-card-top">
+          <span class="project-name">Yardmaster</span>
+          <span class="project-tag">Internal Tool</span>
+        </div>
+        <p class="project-desc">
+          A self-hosted on-call scheduling system for a railroad MOW crew. Advances the weekly
+          rotation automatically, sends per-person email notifications, and handles swap requests
+          via email reply. Tracks missed calls and generates compliance reports. No paid APIs,
+          no frontend — pure Python, administered via CLI over SSH.
+        </p>
+        <div class="project-stack">
+          <span class="stack-pill">Python</span>
+          <span class="stack-pill">FastAPI</span>
+          <span class="stack-pill">SQLite</span>
+          <span class="stack-pill">APScheduler</span>
+          <span class="stack-pill">IMAP/SMTP</span>
+        </div>
+      </div>
 
       <div class="project-card project-card-clearfix">
         <img src="xgps-splash.png" alt="XGPS splash screen" class="project-card-img" />
