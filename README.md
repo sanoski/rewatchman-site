@@ -24,3 +24,6 @@ To push a new database version:
 - [Olive Branch](https://github.com/sanoski/Olive-Branch-alpha) — offline Bible reader (React Native)
 - [TimeWizard](https://github.com/sanoski/TimeWizard) — offline timesheet tracker (React Native)
 - [Bible Study Tracker](https://github.com/sanoski/Bible-Study-Tracker) — terminal Bible reading tracker (Python)
+- **VRS MOW Tracker** *(private)* — web app for tracking railroad tie installation. Logs daily counts, equipment downtime, and crew progress. Generates weekly PDF reports. Administered via Claude AI over MCP. Stack: Python, FastAPI, SQLite, ReportLab, FastMCP.
+- **Yardmaster** *(private)* — self-hosted on-call scheduling system for a railroad MOW crew. Handles weekly rotation, per-person email notifications, and swap requests via email reply. Stack: Python, FastAPI, SQLite, APScheduler, IMAP/SMTP.
+- **XGPS** *(internal)* — field tool for railroad signal maintainers. Locates grade crossings, provides directions, and references shutdown procedures. Fully offline. Stack: React Native, SQLite, OpenStreetMap, Leaflet.js.
